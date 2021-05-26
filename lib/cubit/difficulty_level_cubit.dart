@@ -35,6 +35,7 @@ class DifficultyLevelsCubit extends Cubit<DifficultyLevelsState> {
   }
 
   void levelChanged(String value, int i) {
+    print('lvlchanged');
     final level = DiffLevel.dirty(value);
     List<DiffLevel> levels = List.from(state.levels);
     levels[i] = level;
@@ -48,6 +49,7 @@ class DifficultyLevelsCubit extends Cubit<DifficultyLevelsState> {
   }
 
   void orderChanged(int oldIndex, int newIndex) {
+    print('orderchanged');
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }

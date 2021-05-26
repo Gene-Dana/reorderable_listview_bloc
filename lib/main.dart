@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reorderable_listview_bloc/cubit/cubit.dart';
 
+import 'models/diff_level.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -76,42 +78,39 @@ class _Name extends StatelessWidget {
 class _Levels extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DifficultyLevelsCubit, DifficultyLevelsState>(
-      builder: (context, state) {
-        print('rebuild');
-        return Flexible(
-          child: ReorderableListView(
-            shrinkWrap: true,
-            children: state.levels
-                .asMap()
-                .map((i, lvl) => MapEntry(
-                      i,
-                      ListTile(
-                        key: ValueKey(i),
-                        title: TextField(
-                          onChanged: (lvl) => context
-                              .read<DifficultyLevelsCubit>()
-                              .levelChanged(lvl, i),
-                          decoration: InputDecoration(
-                            labelText: 'Level',
-                            helperText: '',
-                            errorText: state.levels[i].invalid
-                                ? 'invalid level'
-                                : null,
-                          ),
-                        ),
-                        trailing: Icon(Icons.menu),
+    final List<DiffLevel> _items =
+        context.watch<DifficultyLevelsCubit>().state.levels;
+
+    return _items.isEmpty
+        ? Text('List is Empty')
+        : Flexible(
+            child: ReorderableListView(
+              key: Key(_items.hashCode.toString()),
+              shrinkWrap: true,
+              children: <Widget>[
+                for (int index = 0; index < _items.length; index++)
+                  ListTile(
+                    key: ValueKey(index),
+                    title: TextFormField(
+                      initialValue: _items[index].value,
+                      onChanged: (lvl) => context
+                          .read<DifficultyLevelsCubit>()
+                          .levelChanged(lvl, index),
+                      decoration: InputDecoration(
+                        labelText: 'Level',
+                        helperText: '',
+                        errorText:
+                            _items[index].invalid ? 'invalid level' : null,
                       ),
-                    ))
-                .values
-                .toList(),
-            onReorder: (int oldIndex, int newIndex) => context
-                .read<DifficultyLevelsCubit>()
-                .orderChanged(oldIndex, newIndex),
-          ),
-        );
-      },
-    );
+                    ),
+                    trailing: Icon(Icons.menu),
+                  ),
+              ],
+              onReorder: (int oldIndex, int newIndex) => context
+                  .read<DifficultyLevelsCubit>()
+                  .orderChanged(oldIndex, newIndex),
+            ),
+          );
   }
 }
 
