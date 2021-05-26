@@ -92,12 +92,12 @@ class _Levels extends StatelessWidget {
                   ListTile(
                     key: ValueKey(index),
                     title: TextFormField(
-                      initialValue: 'Level',
+                      initialValue: _items[index].value,
                       onChanged: (lvl) => context
                           .read<DifficultyLevelsCubit>()
                           .levelChanged(lvl, index),
                       decoration: InputDecoration(
-                        labelText: _items[index].value,
+                        labelText: 'Level',
                         helperText: '',
                         errorText:
                             _items[index].invalid ? 'invalid level' : null,
