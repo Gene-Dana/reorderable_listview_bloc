@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reorderable_listview_bloc/cubit/cubit.dart';
+import './difficulty_level_flow.dart';
 
 import 'models/diff_level.dart';
 
@@ -14,28 +13,36 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Reorderable Listview',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: DifficultyLevelsScreen(),
+      home: HomeView(),
     );
   }
 }
 
-class DifficultyLevelsScreen extends StatelessWidget {
+class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        child: BlocProvider(
-          create: (_) => DifficultyLevelsCubit(),
-          child: Body(),
+      body: Center(
+        child: TextButton(
+          onPressed: () async {
+            final diffLevels = await Navigator.of(context).push(
+              DifficultyLevelsFlow.route(),
+            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text('Difficulty Flow Complete!\n$diffLevels'),
+                ),
+              );
+          },
+          child: Text('DiffScreen'),
         ),
       ),
     );
   }
 }
+<<<<<<< Updated upstream
 
 class Body extends StatelessWidget {
   @override
@@ -124,3 +131,5 @@ class _Submit extends StatelessWidget {
     );
   }
 }
+=======
+>>>>>>> Stashed changes
